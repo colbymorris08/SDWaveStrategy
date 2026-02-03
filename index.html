@@ -59,9 +59,8 @@
         <div class="flex flex-wrap gap-2">
             <button class="tab-btn active px-4 py-2 rounded-lg bg-gray-700 text-white font-medium" data-tab="seating">ATP by Seating</button>
             <button class="tab-btn px-4 py-2 rounded-lg bg-gray-700 text-white font-medium" data-tab="timing">Purchase Timing</button>
-            <button class="tab-btn px-4 py-2 rounded-lg bg-gray-700 text-white font-medium" data-tab="opponent">Opponent Analysis</button>
+            <button class="tab-btn px-4 py-2 rounded-lg bg-gray-700 text-white font-medium" data-tab="opponent">Opponent/Day of Week</button>
             <button class="tab-btn px-4 py-2 rounded-lg bg-gray-700 text-white font-medium" data-tab="validation">Statistical Validation</button>
-            <button class="tab-btn px-4 py-2 rounded-lg bg-gray-700 text-white font-medium" data-tab="revenue">Revenue Opportunities</button>
             <button class="tab-btn px-4 py-2 rounded-lg bg-gray-700 text-white font-medium" data-tab="recommendations">Recommendations</button>
         </div>
     </div>
@@ -133,10 +132,10 @@
             </div>
         </div>
 
-        <!-- TAB 3: Opponent Analysis -->
+        <!-- TAB 3: Opponent/Day of Week Analysis -->
         <div id="opponent" class="tab-content">
-            <h2 class="text-2xl font-bold mb-2">Opponent-Based Demand Analysis</h2>
-            <p class="text-gray-400 mb-6">Price variation by visiting team</p>
+            <h2 class="text-2xl font-bold mb-2">Opponent & Day of Week Analysis</h2>
+            <p class="text-gray-400 mb-6">Price variation by visiting team and game day timing</p>
             
             <div class="grid md:grid-cols-3 gap-6">
                 <div class="md:col-span-2 card rounded-xl p-6">
@@ -169,6 +168,35 @@
                         </ul>
                     </div>
                 </div>
+            </div>
+            
+            <!-- Day of Week Section -->
+            <h3 class="text-xl font-semibold mt-8 mb-4">Day of Week Analysis</h3>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="card rounded-xl p-6">
+                    <canvas id="dowChart" height="250"></canvas>
+                </div>
+                <div class="card rounded-xl p-6">
+                    <h4 class="text-lg font-semibold mb-4">Revenue Capture Gap</h4>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center p-4 bg-gray-800 rounded-lg">
+                            <span>Club Section Gap</span>
+                            <span class="text-[#00d4aa] font-bold text-xl">$83/ticket</span>
+                        </div>
+                        <div class="flex justify-between items-center p-4 bg-gray-800 rounded-lg">
+                            <span>Pitchside Gap</span>
+                            <span class="text-[#00d4aa] font-bold text-xl">$24/ticket</span>
+                        </div>
+                        <div class="flex justify-between items-center p-4 bg-gray-800 rounded-lg">
+                            <span>Estimated Annual Loss</span>
+                            <span class="text-[#ff6b6b] font-bold text-xl">$400K+</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="insight-box rounded-r-xl p-4 mt-6">
+                <p><strong class="text-[#00d4aa]">Insight:</strong> Sunday games command 4.7x higher ATP ($170) than Friday games ($36). Consider premium pricing for weekend matchups and promotional activations for weekday games.</p>
             </div>
         </div>
 
@@ -242,7 +270,7 @@
                     <p class="font-semibold mb-2">Segment Definitions:</p>
                     <div class="card rounded-xl p-4">
                         <p class="mb-2"><span class="text-[#ff6b6b] font-semibold">Last-Minute:</span> <span class="text-gray-400">Purchases within 2 days of game</span></p>
-                        <p class="mb-2"><span class="text-yellow-400 font-semibold">In-Between:</span> <span class="text-gray-400">Purchases 3-14 days before game</span></p>
+                        <p class="mb-2"><span class="text-yellow-400 font-semibold">Normal:</span> <span class="text-gray-400">Purchases 3-14 days before game</span></p>
                         <p><span class="text-[#00d4aa] font-semibold">Planner:</span> <span class="text-gray-400">Purchases 15+ days before game</span></p>
                     </div>
                 </div>
@@ -268,11 +296,11 @@
                     <p class="text-gray-400 text-sm"><strong>Metric:</strong> % sales 30+ days out</p>
                 </div>
                 <div class="bg-gradient-to-br from-purple-900 to-purple-800 rounded-xl p-6">
-                    <p class="text-purple-400 font-bold text-lg mb-3">Test 3: Personalized Timing</p>
-                    <p class="text-sm mb-2"><strong>Hypothesis:</strong> Sending promos aligned with buyer type increases conversion</p>
-                    <p class="text-gray-400 text-sm mb-1"><strong>Control:</strong> Generic email blast to all</p>
-                    <p class="text-gray-400 text-sm mb-1"><strong>Treatment:</strong> Targeted emails by segment</p>
-                    <p class="text-gray-400 text-sm"><strong>Metric:</strong> Open rate, click rate, conversion</p>
+                    <p class="text-purple-400 font-bold text-lg mb-3">Test 3: Timed Email Promos by Segment</p>
+                    <p class="text-sm mb-2"><strong>Hypothesis:</strong> Sending email promos aligned with fan timing behavior increases conversion</p>
+                    <p class="text-gray-400 text-sm mb-1"><strong>Control:</strong> Generic email blast to all fans</p>
+                    <p class="text-gray-400 text-sm mb-1"><strong>Treatment:</strong> Timed emails by segment (Planners at 30+ days, Normal at 7-14 days, Last-Minute within 48 hrs)</p>
+                    <p class="text-gray-400 text-sm"><strong>Metric:</strong> Open rate, click rate, conversion by segment</p>
                 </div>
             </div>
             
@@ -282,41 +310,8 @@
             </div>
         </div>
 
-        <!-- TAB 5: Revenue Opportunities -->
-        <div id="revenue" class="tab-content">
-            <h2 class="text-2xl font-bold mb-2">Revenue Optimization Opportunities</h2>
-            <p class="text-gray-400 mb-6">Additional factors driving secondary market prices</p>
-            
-            <div class="grid md:grid-cols-2 gap-6">
-                <div class="card rounded-xl p-6">
-                    <h3 class="text-lg font-semibold mb-4">Day of Week Analysis</h3>
-                    <canvas id="dowChart" height="250"></canvas>
-                </div>
-                <div class="card rounded-xl p-6">
-                    <h3 class="text-lg font-semibold mb-4">Revenue Capture Gap</h3>
-                    <div class="space-y-4 mt-6">
-                        <div class="flex justify-between items-center p-4 bg-gray-800 rounded-lg">
-                            <span>Club Section Gap</span>
-                            <span class="text-[#00d4aa] font-bold text-xl">$83/ticket</span>
-                        </div>
-                        <div class="flex justify-between items-center p-4 bg-gray-800 rounded-lg">
-                            <span>Pitchside Gap</span>
-                            <span class="text-[#00d4aa] font-bold text-xl">$24/ticket</span>
-                        </div>
-                        <div class="flex justify-between items-center p-4 bg-gray-800 rounded-lg">
-                            <span>Estimated Annual Loss</span>
-                            <span class="text-[#ff6b6b] font-bold text-xl">$400K+</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="insight-box rounded-r-xl p-4 mt-6">
-                <p><strong class="text-[#00d4aa]">Insight:</strong> Sunday games command 4.7x higher ATP ($170) than Friday games ($36). Consider premium pricing for weekend matchups and promotional activations for weekday games.</p>
-            </div>
-        </div>
 
-        <!-- TAB 6: Recommendations -->
+        <!-- TAB 5: Recommendations -->
         <div id="recommendations" class="tab-content">
             <h2 class="text-2xl font-bold mb-2">Strategic Recommendations</h2>
             <p class="text-gray-400 mb-6">Data-driven strategies to optimize ticket revenue</p>
@@ -336,10 +331,10 @@
                     <div class="w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center text-xl font-bold text-gray-900 mb-4">2</div>
                     <h3 class="text-lg font-semibold mb-3">Timing Strategy</h3>
                     <ul class="space-y-2 text-gray-300 text-sm">
-                        <li>Introduce early-bird incentives (10-15% discount for 30+ days out)</li>
-                        <li>Exclusive experiences for advance purchasers</li>
+                        <li>Early-bird discounts (10-15% off for Planners at 30+ days)</li>
+                        <li>Timed email promos by fan segment: Planners (30+ days), Normal (7-14 days), Last-Minute (48 hrs)</li>
                         <li>Target: Shift 20% of sales from last-minute to advance window</li>
-                        <li>Personalized marketing based on buyer type classification</li>
+                        <li>Personalized ad targeting based on purchase behavior</li>
                     </ul>
                 </div>
                 <div class="card rounded-xl p-6">
@@ -355,13 +350,76 @@
                 <div class="card rounded-xl p-6 border-2 border-purple-500">
                     <div class="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-xl font-bold text-white mb-4">4</div>
                     <h3 class="text-lg font-semibold mb-3">Halftime Upgrades</h3>
-                    <p class="text-purple-400 text-sm font-semibold mb-2">NEW: Airline-Style Seat Upgrades</p>
+                    <p class="text-purple-400 text-sm font-semibold mb-2">Airline-Style Seat Upgrades</p>
                     <ul class="space-y-2 text-gray-300 text-sm">
                         <li><strong class="text-white">+$10 per section</strong> upgrade at halftime</li>
                         <li>Fill unused premium seats with incremental revenue</li>
                         <li>Loyalty program: frequent fans earn free upgrades</li>
                         <li>Mobile app notification at halftime</li>
                     </ul>
+                </div>
+            </div>
+            
+            <!-- SEGMENT-BASED EMAIL & AD TARGETING -->
+            <h3 class="text-xl font-semibold mt-8 mb-4">Segment-Based Email & Ad Targeting</h3>
+            <p class="text-gray-400 mb-4">Personalized outreach based on customer purchase timing behavior</p>
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="card rounded-xl p-6 border-l-4 border-[#ff6b6b]">
+                    <h4 class="text-[#ff6b6b] font-bold text-lg mb-2">Last-Minute Buyers</h4>
+                    <p class="text-gray-400 text-xs mb-3">≤2 days before game | 29% of customers | $72 ATP</p>
+                    <p class="text-white font-semibold text-sm mb-2">Email Strategy:</p>
+                    <ul class="text-gray-300 text-sm space-y-1 mb-3">
+                        <li>Send day-of and day-before flash sale alerts</li>
+                        <li>Subject lines: "Tonight Only" / "Last Chance"</li>
+                        <li>Highlight convenience: mobile tickets, easy parking</li>
+                    </ul>
+                    <p class="text-white font-semibold text-sm mb-2">Ad Targeting:</p>
+                    <ul class="text-gray-300 text-sm space-y-1">
+                        <li>Geo-targeted mobile ads on game day</li>
+                        <li>Social media retargeting 24-48 hrs before</li>
+                        <li>Emphasize spontaneity and FOMO</li>
+                    </ul>
+                </div>
+                <div class="card rounded-xl p-6 border-l-4 border-yellow-400">
+                    <h4 class="text-yellow-400 font-bold text-lg mb-2">Normal Buyers</h4>
+                    <p class="text-gray-400 text-xs mb-3">3-14 days before game | 27% of customers | $113 ATP</p>
+                    <p class="text-white font-semibold text-sm mb-2">Email Strategy:</p>
+                    <ul class="text-gray-300 text-sm space-y-1 mb-3">
+                        <li>Weekly "Upcoming Games" digest emails</li>
+                        <li>Highlight opponent matchups and promotions</li>
+                        <li>Bundle offers: tickets + parking + concessions</li>
+                    </ul>
+                    <p class="text-white font-semibold text-sm mb-2">Ad Targeting:</p>
+                    <ul class="text-gray-300 text-sm space-y-1">
+                        <li>Display ads 1-2 weeks before games</li>
+                        <li>Retarget website visitors who browsed but didn't buy</li>
+                        <li>Emphasize value and experience</li>
+                    </ul>
+                </div>
+                <div class="card rounded-xl p-6 border-l-4 border-[#00d4aa]">
+                    <h4 class="text-[#00d4aa] font-bold text-lg mb-2">Planners</h4>
+                    <p class="text-gray-400 text-xs mb-3">15+ days before game | 44% of customers | $124 ATP</p>
+                    <p class="text-white font-semibold text-sm mb-2">Email Strategy:</p>
+                    <ul class="text-gray-300 text-sm space-y-1 mb-3">
+                        <li>Early access to ticket sales and presales</li>
+                        <li>Season schedule announcements</li>
+                        <li>Exclusive early-bird discounts (10-15% off)</li>
+                    </ul>
+                    <p class="text-white font-semibold text-sm mb-2">Ad Targeting:</p>
+                    <ul class="text-gray-300 text-sm space-y-1">
+                        <li>Awareness campaigns at schedule release</li>
+                        <li>Lookalike audiences based on season ticket holders</li>
+                        <li>Emphasize planning, premium experiences, exclusivity</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-6 mt-6">
+                <div class="insight-box rounded-r-xl p-4">
+                    <p><strong class="text-[#00d4aa]">Mailing List Integration:</strong> Fans on the mailing list show higher engagement rates. Segment the mailing list by purchase behavior (Planner/Normal/Last-Minute) and tailor send times accordingly: Planners receive emails 30+ days out, Normal at 7-14 days, Last-Minute within 48 hours of game time.</p>
+                </div>
+                <div class="recommendation-box rounded-r-xl p-4">
+                    <p><strong class="text-purple-400">Conversion Optimization:</strong> Track email open rates, click-through rates, and conversion by segment. A/B test subject lines and send times within each segment. Expected lift: 15-25% improvement in email-driven ticket sales through personalization.</p>
                 </div>
             </div>
             
@@ -382,7 +440,7 @@
                     <p class="text-gray-300 text-sm mb-3">Based on fan behavior, we anticipate three response groups:</p>
                     <div class="space-y-2 text-sm">
                         <div class="flex justify-between"><span class="text-gray-400">Sticky Seaters (stay put)</span><span class="text-white">~33%</span></div>
-                        <div class="flex justify-between"><span class="text-gray-400">In-Between (consider)</span><span class="text-white">~33%</span></div>
+                        <div class="flex justify-between"><span class="text-gray-400">Normal (consider)</span><span class="text-white">~33%</span></div>
                         <div class="flex justify-between"><span class="text-gray-400">Eager Upgraders</span><span class="text-[#00d4aa] font-bold">~33%</span></div>
                     </div>
                 </div>
@@ -429,7 +487,7 @@
                             <td class="py-3 text-[#00d4aa] font-bold">+$54K</td>
                         </tr>
                         <tr class="border-b border-gray-700 bg-gray-800/30">
-                            <td class="py-3 font-semibold text-white">Halftime Upgrades (NEW)</td>
+                            <td class="py-3 font-semibold text-white">Halftime Upgrades</td>
                             <td class="py-3">$0 (no program)</td>
                             <td class="py-3">~6,500 upgrades × $10 (33% opt-in × 15 games × ~1,300 eligible)</td>
                             <td class="py-3 text-[#00d4aa] font-bold">+$65K</td>
@@ -518,7 +576,7 @@
             ],
             buyerTypes: [
                 {type: 'Last-Minute', atp: 71.73, tickets: 17253},
-                {type: 'In-Between', atp: 112.74, tickets: 15920},
+                {type: 'Normal', atp: 112.74, tickets: 15920},
                 {type: 'Planner', atp: 123.85, tickets: 25948}
             ]
         };
