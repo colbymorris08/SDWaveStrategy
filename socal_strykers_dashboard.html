@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SoCal Strykers | Ticket Analytics Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Inter', sans-serif; }
+        body { background: linear-gradient(135deg, #0a0e17 0%, #1a1f2e 100%); min-height: 100vh; }
+        .tab-btn { transition: all 0.3s ease; }
+        .tab-btn.active { background: #00d4aa; color: #0a0e17; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .card { background: linear-gradient(135deg, #1e2a3a 0%, #2d3748 100%); border: 1px solid rgba(255,255,255,0.1); }
+        .insight-box { background: linear-gradient(135deg, #1a2332 0%, #243447 100%); border-left: 4px solid #00d4aa; }
+        .recommendation-box { background: linear-gradient(135deg, #2d1f3d 0%, #3d2a52 100%); border-left: 4px solid #9f7aea; }
+        .metric-card { background: linear-gradient(135deg, #1e2a3a 0%, #2d3748 100%); }
+        .hero-header { background: linear-gradient(135deg, #1e2a3a 0%, #0a1628 100%); border: 2px solid #00d4aa; }
+    </style>
+</head>
+<body class="text-white">
+    <!-- Header -->
+    <div class="hero-header rounded-2xl p-10 m-6 text-center">
+        <p class="text-gray-400 text-sm mb-2">Analysis by <span class="text-[#00d4aa] font-semibold">Colby Morris</span></p>
+        <h1 class="text-5xl md:text-6xl font-black tracking-widest text-white mb-2">SOCAL STRYKERS</h1>
+        <p class="text-[#00d4aa] uppercase tracking-wider text-lg">Stryker Stadium | Southern California</p>
+        <p class="text-gray-400 mt-4">Secondary Ticket Market Analysis | Executive Dashboard</p>
+    </div>
+
+    <!-- Key Metrics -->
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-4 px-6 mb-6">
+        <div class="metric-card rounded-xl p-4 text-center">
+            <p class="text-gray-400 text-xs uppercase tracking-wide">Total Revenue</p>
+            <p class="text-2xl font-bold text-[#00d4aa]">$5.94M</p>
+        </div>
+        <div class="metric-card rounded-xl p-4 text-center">
+            <p class="text-gray-400 text-xs uppercase tracking-wide">Tickets Sold</p>
+            <p class="text-2xl font-bold text-[#00d4aa]">59,121</p>
+        </div>
+        <div class="metric-card rounded-xl p-4 text-center">
+            <p class="text-gray-400 text-xs uppercase tracking-wide">Avg Ticket Price</p>
+            <p class="text-2xl font-bold text-[#00d4aa]">$103.73</p>
+        </div>
+        <div class="metric-card rounded-xl p-4 text-center">
+            <p class="text-gray-400 text-xs uppercase tracking-wide">Transactions</p>
+            <p class="text-2xl font-bold text-[#00d4aa]">23,006</p>
+        </div>
+        <div class="metric-card rounded-xl p-4 text-center">
+            <p class="text-gray-400 text-xs uppercase tracking-wide">Avg Lead Time</p>
+            <p class="text-2xl font-bold text-[#00d4aa]">20.8 days</p>
+        </div>
+    </div>
+
+    <!-- Tabs Navigation -->
+    <div class="px-6 mb-4">
+        <div class="flex flex-wrap gap-2">
+            <button class="tab-btn active px-4 py-2 rounded-lg bg-gray-700 text-white font-medium" data-tab="seating">ATP by Seating</button>
+            <button class="tab-btn px-4 py-2 rounded-lg bg-gray-700 text-white font-medium" data-tab="timing">Purchase Timing</button>
+            <button class="tab-btn px-4 py-2 rounded-lg bg-gray-700 text-white font-medium" data-tab="opponent">Opponent Analysis</button>
+            <button class="tab-btn px-4 py-2 rounded-lg bg-gray-700 text-white font-medium" data-tab="validation">Statistical Validation</button>
+            <button class="tab-btn px-4 py-2 rounded-lg bg-gray-700 text-white font-medium" data-tab="revenue">Revenue Opportunities</button>
+            <button class="tab-btn px-4 py-2 rounded-lg bg-gray-700 text-white font-medium" data-tab="recommendations">Recommendations</button>
+        </div>
+    </div>
+
+    <!-- Tab Contents -->
+    <div class="px-6 pb-6">
+        
+        <!-- TAB 1: ATP by Seating -->
+        <div id="seating" class="tab-content active">
+            <h2 class="text-2xl font-bold mb-2">Average Ticket Price by Seating Area</h2>
+            <p class="text-gray-400 mb-6">Comparing secondary market prices to primary pricing strategy</p>
+            
+            <!-- Stadium Map -->
+            <div class="card rounded-xl p-4 mb-6">
+                <h3 class="text-lg font-semibold mb-4">Stryker Stadium Seating Map & Primary Pricing</h3>
+                <img id="stadiumMap" alt="Stadium Seating Map" class="w-full max-w-4xl mx-auto rounded-lg bg-white p-2">
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="md:col-span-2 card rounded-xl p-6">
+                    <canvas id="seatingChart" height="300"></canvas>
+                </div>
+                <div class="space-y-4">
+                    <h3 class="text-lg font-semibold">Secondary vs Primary Premium</h3>
+                    <div class="card rounded-xl p-4">
+                        <p class="text-gray-400">Club</p>
+                        <p class="text-2xl font-bold text-[#00d4aa]">+69.2%</p>
+                        <p class="text-sm text-gray-400">$203 vs $120 primary</p>
+                    </div>
+                    <div class="card rounded-xl p-4">
+                        <p class="text-gray-400">Pitchside</p>
+                        <p class="text-2xl font-bold text-[#00d4aa]">+9.6%</p>
+                        <p class="text-sm text-gray-400">$274 vs $250 primary</p>
+                    </div>
+                    <div class="card rounded-xl p-4">
+                        <p class="text-gray-400">Upper Level GA</p>
+                        <p class="text-2xl font-bold text-[#00d4aa]">+8.1%</p>
+                        <p class="text-sm text-gray-400">$81 vs $75 primary</p>
+                    </div>
+                    <div class="card rounded-xl p-4">
+                        <p class="text-gray-400">Lower Level GA</p>
+                        <p class="text-2xl font-bold text-[#ff6b6b]">-19.4%</p>
+                        <p class="text-sm text-gray-400">$101 vs $125 primary</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="insight-box rounded-r-xl p-4 mt-6">
+                <p><strong class="text-[#00d4aa]">Key Insight:</strong> Club seats show a massive 69% secondary market premium, indicating significant underpricing. This represents approximately $83/ticket in uncaptured value, or $363K+ annually.</p>
+            </div>
+        </div>
+
+        <!-- TAB 2: Purchase Timing -->
+        <div id="timing" class="tab-content">
+            <h2 class="text-2xl font-bold mb-2">ATP by Purchase Timing</h2>
+            <p class="text-gray-400 mb-6">Understanding how purchase lead time affects ticket prices</p>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="card rounded-xl p-6">
+                    <canvas id="timingChart" height="300"></canvas>
+                </div>
+                <div class="card rounded-xl p-6">
+                    <canvas id="timingPieChart" height="300"></canvas>
+                </div>
+            </div>
+            
+            <div class="insight-box rounded-r-xl p-4 mt-6">
+                <p><strong class="text-[#00d4aa]">Key Finding:</strong> 33% of tickets are sold within 3 days of game day at the lowest prices ($64-$86 ATP). Early planners (60+ days) pay 2.4x more ($152 ATP). Opportunity to shift demand earlier through incentives.</p>
+            </div>
+        </div>
+
+        <!-- TAB 3: Opponent Analysis -->
+        <div id="opponent" class="tab-content">
+            <h2 class="text-2xl font-bold mb-2">Opponent-Based Demand Analysis</h2>
+            <p class="text-gray-400 mb-6">Price variation by visiting team</p>
+            
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="md:col-span-2 card rounded-xl p-6">
+                    <canvas id="opponentChart" height="500"></canvas>
+                </div>
+                <div class="space-y-4">
+                    <h3 class="text-lg font-semibold">Game Tier Classification</h3>
+                    <div class="bg-gradient-to-r from-green-900 to-green-800 rounded-xl p-4">
+                        <p class="text-[#00d4aa] font-bold text-lg">PREMIUM TIER</p>
+                        <p class="text-sm text-gray-300">ATP > $114</p>
+                        <p class="text-gray-400 mt-2">WSH, BAL, MEM, PHL, NY</p>
+                    </div>
+                    <div class="bg-gradient-to-r from-yellow-900 to-yellow-800 rounded-xl p-4">
+                        <p class="text-yellow-400 font-bold text-lg">STANDARD TIER</p>
+                        <p class="text-sm text-gray-300">ATP $93 - $114</p>
+                        <p class="text-gray-400 mt-2">SF, MIN, CHI, BOS</p>
+                    </div>
+                    <div class="bg-gradient-to-r from-red-900 to-red-800 rounded-xl p-4">
+                        <p class="text-[#ff6b6b] font-bold text-lg">VALUE TIER</p>
+                        <p class="text-sm text-gray-300">ATP < $93</p>
+                        <p class="text-gray-400 mt-2">STL, SD, IND, MIL, BUF, SEA...</p>
+                    </div>
+                    
+                    <div class="recommendation-box rounded-r-xl p-4">
+                        <p><strong class="text-[#9f7aea]">Recommendation:</strong> Implement dynamic pricing tiers:</p>
+                        <ul class="mt-2 text-sm text-gray-300">
+                            <li>Premium: +25-40% over base</li>
+                            <li>Standard: Base price</li>
+                            <li>Value: -10-15% with promotions</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 4: Statistical Validation -->
+        <div id="validation" class="tab-content">
+            <h2 class="text-2xl font-bold mb-2">Statistical Validation & Predictive Modeling</h2>
+            <p class="text-gray-400 mb-6">Applying rigorous statistical methods to validate findings and build predictive models</p>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- T-Tests -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Hypothesis Testing: Seating Premium</h3>
+                    <p class="text-gray-400 mb-4"><strong>Question:</strong> Is the Club section secondary premium statistically significant?</p>
+                    
+                    <div class="card rounded-xl p-4 mb-4">
+                        <p class="font-semibold mb-3">T-Test Results: Club vs Upper Level GA</p>
+                        <div class="flex justify-between mb-2">
+                            <span class="text-gray-400">Club Mean ATP:</span>
+                            <span class="text-[#00d4aa] font-semibold">$203.09</span>
+                        </div>
+                        <div class="flex justify-between mb-2">
+                            <span class="text-gray-400">Upper Level Mean ATP:</span>
+                            <span class="text-[#00d4aa] font-semibold">$81.05</span>
+                        </div>
+                        <div class="flex justify-between mb-2">
+                            <span class="text-gray-400">T-Statistic:</span>
+                            <span class="font-semibold">39.0528</span>
+                        </div>
+                        <div class="flex justify-between mb-2">
+                            <span class="text-gray-400">P-Value:</span>
+                            <span class="text-[#00d4aa] font-semibold">&lt; 0.0001</span>
+                        </div>
+                        <div class="border-t border-gray-600 pt-3 mt-3">
+                            <span>Conclusion: </span>
+                            <span class="text-[#00d4aa] font-semibold">Statistically Significant (p &lt; 0.05)</span>
+                        </div>
+                    </div>
+                    
+                    <p class="text-gray-400 mb-4"><strong>Question:</strong> Do early planners pay significantly more than last-minute buyers?</p>
+                    
+                    <div class="card rounded-xl p-4">
+                        <p class="font-semibold mb-3">T-Test Results: Early (30+ days) vs Late (0-3 days)</p>
+                        <div class="flex justify-between mb-2">
+                            <span class="text-gray-400">Early Planners Mean ATP:</span>
+                            <span class="text-[#00d4aa] font-semibold">$129.70</span>
+                        </div>
+                        <div class="flex justify-between mb-2">
+                            <span class="text-gray-400">Last-Minute Mean ATP:</span>
+                            <span class="text-[#00d4aa] font-semibold">$75.16</span>
+                        </div>
+                        <div class="flex justify-between mb-2">
+                            <span class="text-gray-400">P-Value:</span>
+                            <span class="text-[#00d4aa] font-semibold">&lt; 0.0001</span>
+                        </div>
+                        <div class="border-t border-gray-600 pt-3 mt-3">
+                            <span>Conclusion: </span>
+                            <span class="text-[#00d4aa] font-semibold">Statistically Significant (p &lt; 0.05)</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Ticket Timing Model -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Ticket Timing Classification Model</h3>
+                    <p class="text-gray-400 mb-4 italic">Fan segmentation model for targeted marketing strategies</p>
+                    
+                    <div class="card rounded-xl p-6 mb-4">
+                        <canvas id="buyerTypeChart" height="250"></canvas>
+                    </div>
+                    
+                    <p class="font-semibold mb-2">Segment Definitions:</p>
+                    <div class="card rounded-xl p-4">
+                        <p class="mb-2"><span class="text-[#ff6b6b] font-semibold">Last-Minute:</span> <span class="text-gray-400">Purchases within 2 days of game</span></p>
+                        <p class="mb-2"><span class="text-yellow-400 font-semibold">In-Between:</span> <span class="text-gray-400">Purchases 3-14 days before game</span></p>
+                        <p><span class="text-[#00d4aa] font-semibold">Planner:</span> <span class="text-gray-400">Purchases 15+ days before game</span></p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- A/B Testing -->
+            <h3 class="text-xl font-semibold mt-8 mb-4">Recommended A/B Testing Framework</h3>
+            <p class="text-gray-400 mb-6">Before full deployment of pricing changes, validate with controlled experiments</p>
+            
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="bg-gradient-to-br from-green-900 to-green-800 rounded-xl p-6">
+                    <p class="text-[#00d4aa] font-bold text-lg mb-3">Test 1: Club Pricing</p>
+                    <p class="text-sm mb-2"><strong>Hypothesis:</strong> Raising Club prices by 25% will not significantly reduce demand</p>
+                    <p class="text-gray-400 text-sm mb-1"><strong>Control:</strong> Current $120/game pricing</p>
+                    <p class="text-gray-400 text-sm mb-1"><strong>Treatment:</strong> $150/game pricing</p>
+                    <p class="text-gray-400 text-sm"><strong>Metric:</strong> Conversion rate, total revenue</p>
+                </div>
+                <div class="bg-gradient-to-br from-yellow-900 to-yellow-800 rounded-xl p-6">
+                    <p class="text-yellow-400 font-bold text-lg mb-3">Test 2: Early-Bird Incentive</p>
+                    <p class="text-sm mb-2"><strong>Hypothesis:</strong> 10% discount for 30+ day purchases will shift demand earlier</p>
+                    <p class="text-gray-400 text-sm mb-1"><strong>Control:</strong> Standard pricing timeline</p>
+                    <p class="text-gray-400 text-sm mb-1"><strong>Treatment:</strong> 10% early-bird discount</p>
+                    <p class="text-gray-400 text-sm"><strong>Metric:</strong> % sales 30+ days out</p>
+                </div>
+                <div class="bg-gradient-to-br from-purple-900 to-purple-800 rounded-xl p-6">
+                    <p class="text-purple-400 font-bold text-lg mb-3">Test 3: Personalized Timing</p>
+                    <p class="text-sm mb-2"><strong>Hypothesis:</strong> Sending promos aligned with buyer type increases conversion</p>
+                    <p class="text-gray-400 text-sm mb-1"><strong>Control:</strong> Generic email blast to all</p>
+                    <p class="text-gray-400 text-sm mb-1"><strong>Treatment:</strong> Targeted emails by segment</p>
+                    <p class="text-gray-400 text-sm"><strong>Metric:</strong> Open rate, click rate, conversion</p>
+                </div>
+            </div>
+            
+            <div class="insight-box rounded-r-xl p-4 mt-6">
+                <p><strong class="text-[#00d4aa]">Why A/B Test First?</strong> While immediate deployment of pricing changes captures revenue faster, A/B testing ensures the model works in real-world conditions and builds organizational confidence in data-driven decisions.</p>
+                <p class="mt-3"><strong class="text-[#00d4aa]">Recommendation:</strong> Run Tests 1 and 2 for the first half of next season, then full deployment if successful.</p>
+            </div>
+        </div>
+
+        <!-- TAB 5: Revenue Opportunities -->
+        <div id="revenue" class="tab-content">
+            <h2 class="text-2xl font-bold mb-2">Revenue Optimization Opportunities</h2>
+            <p class="text-gray-400 mb-6">Additional factors driving secondary market prices</p>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="card rounded-xl p-6">
+                    <h3 class="text-lg font-semibold mb-4">Day of Week Analysis</h3>
+                    <canvas id="dowChart" height="250"></canvas>
+                </div>
+                <div class="card rounded-xl p-6">
+                    <h3 class="text-lg font-semibold mb-4">Revenue Capture Gap</h3>
+                    <div class="space-y-4 mt-6">
+                        <div class="flex justify-between items-center p-4 bg-gray-800 rounded-lg">
+                            <span>Club Section Gap</span>
+                            <span class="text-[#00d4aa] font-bold text-xl">$83/ticket</span>
+                        </div>
+                        <div class="flex justify-between items-center p-4 bg-gray-800 rounded-lg">
+                            <span>Pitchside Gap</span>
+                            <span class="text-[#00d4aa] font-bold text-xl">$24/ticket</span>
+                        </div>
+                        <div class="flex justify-between items-center p-4 bg-gray-800 rounded-lg">
+                            <span>Estimated Annual Loss</span>
+                            <span class="text-[#ff6b6b] font-bold text-xl">$400K+</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="insight-box rounded-r-xl p-4 mt-6">
+                <p><strong class="text-[#00d4aa]">Insight:</strong> Sunday games command 4.7x higher ATP ($170) than Friday games ($36). Consider premium pricing for weekend matchups and promotional activations for weekday games.</p>
+            </div>
+        </div>
+
+        <!-- TAB 6: Recommendations -->
+        <div id="recommendations" class="tab-content">
+            <h2 class="text-2xl font-bold mb-2">Strategic Recommendations</h2>
+            <p class="text-gray-400 mb-6">Data-driven strategies to optimize ticket revenue</p>
+            
+            <div class="grid md:grid-cols-4 gap-6">
+                <div class="card rounded-xl p-6">
+                    <div class="w-12 h-12 bg-[#00d4aa] rounded-full flex items-center justify-center text-xl font-bold text-gray-900 mb-4">1</div>
+                    <h3 class="text-lg font-semibold mb-3">Pricing Strategy</h3>
+                    <ul class="space-y-2 text-gray-300 text-sm">
+                        <li>Raise Club section prices from $120 to $160-180/game (+33-50%)</li>
+                        <li>Implement 3-tier dynamic pricing by opponent</li>
+                        <li>Add day-of-week premium for Sunday games (+15-20%)</li>
+                        <li>Reduce Lower Level GA prices to match demand</li>
+                    </ul>
+                </div>
+                <div class="card rounded-xl p-6">
+                    <div class="w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center text-xl font-bold text-gray-900 mb-4">2</div>
+                    <h3 class="text-lg font-semibold mb-3">Timing Strategy</h3>
+                    <ul class="space-y-2 text-gray-300 text-sm">
+                        <li>Introduce early-bird incentives (10-15% discount for 30+ days out)</li>
+                        <li>Exclusive experiences for advance purchasers</li>
+                        <li>Target: Shift 20% of sales from last-minute to advance window</li>
+                        <li>Personalized marketing based on buyer type classification</li>
+                    </ul>
+                </div>
+                <div class="card rounded-xl p-6">
+                    <div class="w-12 h-12 bg-purple-400 rounded-full flex items-center justify-center text-xl font-bold text-gray-900 mb-4">3</div>
+                    <h3 class="text-lg font-semibold mb-3">Fan Experience</h3>
+                    <ul class="space-y-2 text-gray-300 text-sm">
+                        <li>Theme nights and giveaways for value-tier games</li>
+                        <li>Group discount programs for corporate and community</li>
+                        <li>Family packages bundling tickets with concessions</li>
+                        <li>Youth soccer partnerships for low-demand opponents</li>
+                    </ul>
+                </div>
+                <div class="card rounded-xl p-6 border-2 border-purple-500">
+                    <div class="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-xl font-bold text-white mb-4">4</div>
+                    <h3 class="text-lg font-semibold mb-3">Halftime Upgrades</h3>
+                    <p class="text-purple-400 text-sm font-semibold mb-2">NEW: Airline-Style Seat Upgrades</p>
+                    <ul class="space-y-2 text-gray-300 text-sm">
+                        <li><strong class="text-white">+$10 per section</strong> upgrade at halftime</li>
+                        <li>Fill unused premium seats with incremental revenue</li>
+                        <li>Loyalty program: frequent fans earn free upgrades</li>
+                        <li>Mobile app notification at halftime</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- HALFTIME UPGRADE DEEP DIVE -->
+            <h3 class="text-xl font-semibold mt-8 mb-4">Halftime Upgrade Program Details</h3>
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="card rounded-xl p-6">
+                    <h4 class="text-[#00d4aa] font-semibold mb-3">The Concept</h4>
+                    <p class="text-gray-300 text-sm mb-3">At halftime, fans in lower-tier sections can upgrade to unsold premium seats via mobile app or kiosk.</p>
+                    <div class="bg-gray-800 rounded-lg p-3 text-sm">
+                        <p class="text-gray-400">Upper GA → Lower GA: <span class="text-[#00d4aa] font-bold">+$10</span></p>
+                        <p class="text-gray-400">Lower GA → Club: <span class="text-[#00d4aa] font-bold">+$10</span></p>
+                        <p class="text-gray-400">Club → Pitchside: <span class="text-[#00d4aa] font-bold">+$10</span></p>
+                    </div>
+                </div>
+                <div class="card rounded-xl p-6">
+                    <h4 class="text-yellow-400 font-semibold mb-3">Customer Segments</h4>
+                    <p class="text-gray-300 text-sm mb-3">Based on fan behavior, we anticipate three response groups:</p>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex justify-between"><span class="text-gray-400">Sticky Seaters (stay put)</span><span class="text-white">~33%</span></div>
+                        <div class="flex justify-between"><span class="text-gray-400">In-Between (consider)</span><span class="text-white">~33%</span></div>
+                        <div class="flex justify-between"><span class="text-gray-400">Eager Upgraders</span><span class="text-[#00d4aa] font-bold">~33%</span></div>
+                    </div>
+                </div>
+                <div class="card rounded-xl p-6">
+                    <h4 class="text-purple-400 font-semibold mb-3">Loyalty Integration</h4>
+                    <p class="text-gray-300 text-sm mb-3">Frequent attendees earn points toward free upgrades:</p>
+                    <div class="space-y-2 text-sm">
+                        <p class="text-gray-400">5 games attended → <span class="text-[#00d4aa]">1 free upgrade</span></p>
+                        <p class="text-gray-400">Season ticket holders → <span class="text-[#00d4aa]">Priority access</span></p>
+                        <p class="text-gray-400">Birthday/Anniversary → <span class="text-[#00d4aa]">Complimentary upgrade</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- REVENUE MODEL -->
+            <h3 class="text-xl font-semibold mt-8 mb-4">Revenue Model</h3>
+            <div class="card rounded-xl p-6 overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="text-left border-b border-gray-600">
+                            <th class="pb-3 text-[#00d4aa]">Initiative</th>
+                            <th class="pb-3 text-gray-400">Current State</th>
+                            <th class="pb-3 text-gray-400">Proposed Change</th>
+                            <th class="pb-3 text-[#00d4aa]">Annual Impact</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-gray-300">
+                        <tr class="border-b border-gray-700">
+                            <td class="py-3 font-semibold text-white">Club Pricing Adjustment</td>
+                            <td class="py-3">$120 × 4,382 tickets = $526K</td>
+                            <td class="py-3">$160 × 4,382 tickets = $701K</td>
+                            <td class="py-3 text-[#00d4aa] font-bold">+$175K</td>
+                        </tr>
+                        <tr class="border-b border-gray-700 bg-gray-800/30">
+                            <td class="py-3 font-semibold text-white">Dynamic Opponent Pricing</td>
+                            <td class="py-3">Flat pricing all games</td>
+                            <td class="py-3">+25% Premium tier (WSH, BAL, etc.)</td>
+                            <td class="py-3 text-[#00d4aa] font-bold">+$89K</td>
+                        </tr>
+                        <tr class="border-b border-gray-700">
+                            <td class="py-3 font-semibold text-white">Sunday Premium</td>
+                            <td class="py-3">Flat pricing all days</td>
+                            <td class="py-3">+15% weekend game premium</td>
+                            <td class="py-3 text-[#00d4aa] font-bold">+$54K</td>
+                        </tr>
+                        <tr class="border-b border-gray-700 bg-gray-800/30">
+                            <td class="py-3 font-semibold text-white">Halftime Upgrades (NEW)</td>
+                            <td class="py-3">$0 (no program)</td>
+                            <td class="py-3">~6,500 upgrades × $10 (33% opt-in × 15 games × ~1,300 eligible)</td>
+                            <td class="py-3 text-[#00d4aa] font-bold">+$65K</td>
+                        </tr>
+                        <tr class="bg-[#00d4aa]/20">
+                            <td class="py-3 font-bold text-white text-lg">TOTAL PROJECTED UPLIFT</td>
+                            <td class="py-3"></td>
+                            <td class="py-3"></td>
+                            <td class="py-3 text-[#00d4aa] font-bold text-xl">+$383K/year</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- METHODOLOGY -->
+            <h3 class="text-xl font-semibold mt-8 mb-4">Analysis Methodology</h3>
+            <div class="grid md:grid-cols-4 gap-4">
+                <div class="card rounded-xl p-4 text-center">
+                    <div class="text-2xl font-bold text-[#00d4aa] mb-2">1</div>
+                    <p class="text-sm font-semibold mb-1">Exploratory Analysis</p>
+                    <p class="text-xs text-gray-400">Data cleaning, feature engineering, pattern discovery</p>
+                </div>
+                <div class="card rounded-xl p-4 text-center">
+                    <div class="text-2xl font-bold text-yellow-400 mb-2">2</div>
+                    <p class="text-sm font-semibold mb-1">Statistical Inference</p>
+                    <p class="text-xs text-gray-400">T-tests, confidence intervals, hypothesis validation</p>
+                </div>
+                <div class="card rounded-xl p-4 text-center">
+                    <div class="text-2xl font-bold text-purple-400 mb-2">3</div>
+                    <p class="text-sm font-semibold mb-1">Predictive Segmentation</p>
+                    <p class="text-xs text-gray-400">Customer classification model for targeted marketing</p>
+                </div>
+                <div class="card rounded-xl p-4 text-center">
+                    <div class="text-2xl font-bold text-pink-400 mb-2">4</div>
+                    <p class="text-sm font-semibold mb-1">A/B Testing Framework</p>
+                    <p class="text-xs text-gray-400">Controlled experiments before full deployment</p>
+                </div>
+            </div>
+            
+            <div class="insight-box rounded-r-xl p-4 mt-6">
+                <p><strong class="text-[#00d4aa]">Deployment Recommendation:</strong> Run A/B tests for Club pricing and early-bird discounts during the first half of next season. If results validate hypotheses (no significant demand reduction, measurable shift to advance purchases), proceed with full deployment for the following season.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="text-center py-8 border-t border-gray-700">
+        <p class="text-lg font-semibold">SoCal Strykers Ticket Analytics Dashboard</p>
+        <p class="text-gray-400 mt-2">Analysis by <span class="text-[#00d4aa] font-semibold">Colby Morris</span></p>
+        <p class="text-gray-500 text-sm mt-2">Based on secondary ticket transaction data | Prepared for Executive Review</p>
+    </div>
+
+    <script>
+        // Data
+        const data = {
+            seating: [
+                {category: 'Club', atp: 203.09, primaryPrice: 120},
+                {category: 'Pitchside', atp: 273.99, primaryPrice: 250},
+                {category: 'Upper Level GA', atp: 81.05, primaryPrice: 75},
+                {category: 'Lower Level GA', atp: 100.74, primaryPrice: 125}
+            ],
+            timing: [
+                {bucket: 'Game Day', atp: 64.43, tickets: 9325},
+                {bucket: '1-3 Days', atp: 86.05, tickets: 10405},
+                {bucket: '4-7 Days', atp: 114.74, tickets: 6774},
+                {bucket: '8-14 Days', atp: 115.44, tickets: 6669},
+                {bucket: '15-30 Days', atp: 114.29, tickets: 9683},
+                {bucket: '31-60 Days', atp: 113.70, tickets: 9639},
+                {bucket: '60+ Days', atp: 151.85, tickets: 6626}
+            ],
+            opponents: [
+                {opponent: 'WSH', atp: 415.76}, {opponent: 'BAL', atp: 125.66}, {opponent: 'MEM', atp: 119.32},
+                {opponent: 'PHL', atp: 114.96}, {opponent: 'NY', atp: 111.88}, {opponent: 'SF', atp: 97.36},
+                {opponent: 'MIN', atp: 87.89}, {opponent: 'CHI', atp: 87.00}, {opponent: 'BOS', atp: 80.25},
+                {opponent: 'LOU', atp: 68.65}, {opponent: 'CIN', atp: 65.53}, {opponent: 'ATL', atp: 57.85},
+                {opponent: 'KC', atp: 56.32}, {opponent: 'TAM', atp: 52.92}, {opponent: 'PIT', atp: 48.57},
+                {opponent: 'POR', atp: 47.97}, {opponent: 'HOU', atp: 46.23}, {opponent: 'MIA', atp: 45.26},
+                {opponent: 'LA', atp: 43.71}, {opponent: 'SLC', atp: 43.02}, {opponent: 'CLT', atp: 37.45},
+                {opponent: 'LV', atp: 35.89}, {opponent: 'SEA', atp: 33.44}, {opponent: 'BUF', atp: 31.40},
+                {opponent: 'MIL', atp: 30.69}, {opponent: 'IND', atp: 30.63}, {opponent: 'SD', atp: 29.25},
+                {opponent: 'STL', atp: 27.54}
+            ],
+            dayOfWeek: [
+                {day: 'Monday', atp: 81.30}, {day: 'Tuesday', atp: 69.41}, {day: 'Wednesday', atp: 73.91},
+                {day: 'Thursday', atp: 48.33}, {day: 'Friday', atp: 36.26}, {day: 'Sunday', atp: 169.82}
+            ],
+            buyerTypes: [
+                {type: 'Last-Minute', atp: 71.73, tickets: 17253},
+                {type: 'In-Between', atp: 112.74, tickets: 15920},
+                {type: 'Planner', atp: 123.85, tickets: 25948}
+            ]
+        };
+
+        // Tab switching
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                btn.classList.add('active');
+                document.getElementById(btn.dataset.tab).classList.add('active');
+            });
+        });
+
+        // Chart defaults
+        Chart.defaults.color = '#ffffff';
+        Chart.defaults.borderColor = 'rgba(255,255,255,0.1)';
+
+        // Seating Chart
+        new Chart(document.getElementById('seatingChart'), {
+            type: 'bar',
+            data: {
+                labels: data.seating.map(d => d.category),
+                datasets: [
+                    {
+                        label: 'Secondary ATP',
+                        data: data.seating.map(d => d.atp),
+                        backgroundColor: '#00d4aa',
+                        borderRadius: 6
+                    },
+                    {
+                        label: 'Primary Price',
+                        data: data.seating.map(d => d.primaryPrice),
+                        backgroundColor: '#ff6b6b',
+                        borderRadius: 6
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: { display: true, text: 'Secondary vs Primary Pricing by Seating Category', font: { size: 16 } },
+                    legend: { position: 'top' }
+                },
+                scales: {
+                    y: { beginAtZero: true, title: { display: true, text: 'Price ($)' } }
+                }
+            }
+        });
+
+        // Timing Chart
+        new Chart(document.getElementById('timingChart'), {
+            type: 'bar',
+            data: {
+                labels: data.timing.map(d => d.bucket),
+                datasets: [{
+                    label: 'ATP ($)',
+                    data: data.timing.map(d => d.atp),
+                    backgroundColor: data.timing.map(d => d.atp > 100 ? '#00d4aa' : (d.atp > 70 ? '#ffd93d' : '#ff6b6b')),
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: { display: true, text: 'ATP by Purchase Timing', font: { size: 16 } },
+                    legend: { display: false }
+                },
+                scales: {
+                    y: { beginAtZero: true, title: { display: true, text: 'Avg Ticket Price ($)' } }
+                }
+            }
+        });
+
+        // Timing Pie Chart
+        new Chart(document.getElementById('timingPieChart'), {
+            type: 'doughnut',
+            data: {
+                labels: data.timing.map(d => d.bucket),
+                datasets: [{
+                    data: data.timing.map(d => d.tickets),
+                    backgroundColor: ['#ff6b6b', '#ff8c42', '#ffd93d', '#a8e063', '#56c596', '#00d4aa', '#00a3ff']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: { display: true, text: 'Ticket Distribution by Timing', font: { size: 16 } },
+                    legend: { position: 'right' }
+                }
+            }
+        });
+
+        // Opponent Chart
+        new Chart(document.getElementById('opponentChart'), {
+            type: 'bar',
+            data: {
+                labels: data.opponents.map(d => d.opponent),
+                datasets: [{
+                    label: 'ATP ($)',
+                    data: data.opponents.map(d => d.atp),
+                    backgroundColor: data.opponents.map(d => d.atp > 114 ? '#00d4aa' : (d.atp > 93 ? '#ffd93d' : '#ff6b6b')),
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                plugins: {
+                    title: { display: true, text: 'ATP by Opponent (Ranked)', font: { size: 16 } },
+                    legend: { display: false }
+                },
+                scales: {
+                    x: { beginAtZero: true, title: { display: true, text: 'Avg Ticket Price ($)' } }
+                }
+            }
+        });
+
+        // Buyer Type Chart
+        new Chart(document.getElementById('buyerTypeChart'), {
+            type: 'bar',
+            data: {
+                labels: data.buyerTypes.map(d => d.type),
+                datasets: [{
+                    label: 'Tickets Sold',
+                    data: data.buyerTypes.map(d => d.tickets),
+                    backgroundColor: ['#ff6b6b', '#ffd93d', '#00d4aa'],
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: { display: true, text: 'Customer Segmentation by Purchase Timing', font: { size: 16 } },
+                    legend: { display: false }
+                },
+                scales: {
+                    y: { beginAtZero: true, title: { display: true, text: 'Tickets Sold' } }
+                }
+            }
+        });
+
+        // Day of Week Chart
+        new Chart(document.getElementById('dowChart'), {
+            type: 'bar',
+            data: {
+                labels: data.dayOfWeek.map(d => d.day),
+                datasets: [{
+                    label: 'ATP ($)',
+                    data: data.dayOfWeek.map(d => d.atp),
+                    backgroundColor: data.dayOfWeek.map(d => d.atp > 100 ? '#00d4aa' : (d.atp > 50 ? '#ffd93d' : '#ff6b6b')),
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: { beginAtZero: true, title: { display: true, text: 'Avg Ticket Price ($)' } }
+                }
+            }
+        });
+
+        // Load stadium map
+        document.getElementById('stadiumMap').src = 'stadium_map.png';
+    </script>
+</body>
+</html>
