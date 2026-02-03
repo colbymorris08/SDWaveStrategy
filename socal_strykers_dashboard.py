@@ -796,9 +796,9 @@ with tab4:
     
     with col2:
         st.markdown("### Ticket Timing Classification Model")
-        st.markdown("*Inspired by the Golden State Warriors analytics approach*")
+        st.markdown("*Fan segmentation model for targeted marketing strategies*")
         
-        # Create customer type classification like Warriors
+        # Create customer type classification
         def classify_buyer(days):
             if days <= 2:
                 return 'Last-Minute'
@@ -845,7 +845,7 @@ with tab4:
         st.plotly_chart(fig, use_container_width=True)
         
         # Show breakdown
-        st.markdown("**Segment Definitions (Warriors Model):**")
+        st.markdown("**Segment Definitions:**")
         st.markdown("""
         <div style="background: linear-gradient(135deg, #1e2a3a 0%, #2d3748 100%); 
                     padding: 16px; border-radius: 12px;">
@@ -902,8 +902,7 @@ with tab4:
     st.markdown("""
     <div class="insight-box" style="margin-top: 20px;">
         <strong>Why A/B Test First?</strong><br>
-        The Warriors analytics team debated whether to deploy their ticket timing model immediately (86% accuracy) 
-        or run a controlled experiment first. While immediate deployment captures revenue faster, A/B testing ensures 
+        While immediate deployment of pricing changes captures revenue faster, A/B testing ensures 
         the model works in real-world conditions and builds organizational confidence in data-driven decisions.
         <br><br>
         <strong>Recommendation:</strong> Run Tests 1 and 2 for the first half of next season, then full deployment if successful.
