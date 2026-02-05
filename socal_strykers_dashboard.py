@@ -125,6 +125,7 @@ figures = [
     ('figure_00_summary_stats.png', 'Summary Statistics Dashboard'),
     ('figure_05_atp_by_customer_type.png', 'ATP by Customer Type'),
     ('figure_06_atp_by_seating.png', 'ATP by Seating Category'),
+    ('figure_10_promotion_comparison.png', 'ATP by Promotion Status'),
     ('figure_03_days_before_game.png', 'Purchase Timing Distribution'),
     ('figure_04_atp_by_season.png', 'ATP by Season'),
     ('figure_07_atp_by_promotion_type.png', 'ATP by Promotion Type'),
@@ -439,7 +440,8 @@ html_content = f"""
         <header>
             <h1>🎫 SoCal Strykers Revenue Analysis</h1>
             <div class="subtitle">Statistical Model & Strategic Revenue Optimization</div>
-            <div class="subtitle" style="font-size: 0.9em; margin-top: 5px;">Data Source: data.csv | Seasons 2020-2021</div>
+            <div class="subtitle" style="font-size: 0.9em; margin-top: 5px;">Colby Morris | colby.morris08@gmail.com</div>
+            <div class="subtitle" style="font-size: 0.85em; margin-top: 3px;">San Diego Wave Questionnaire</div>
         </header>
 
         <!-- Executive Summary -->
@@ -771,8 +773,9 @@ html_content += """
 
         <footer>
             <p>SoCal Strykers Revenue Analysis Dashboard</p>
-            <p>Generated from data.csv | Statistical Model & Revenue Optimization</p>
-            <p style="margin-top: 10px; font-size: 0.9em;">© 2026 | Data-Driven Sports Analytics</p>
+            <p>Statistical Model & Strategic Revenue Optimization</p>
+            <p style="margin-top: 10px;">Colby Morris | colby.morris08@gmail.com</p>
+            <p style="font-size: 0.9em;">San Diego Wave Questionnaire</p>
         </footer>
     </div>
 </body>
