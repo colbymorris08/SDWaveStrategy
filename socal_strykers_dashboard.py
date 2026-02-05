@@ -438,7 +438,7 @@ html_content = f"""
 <body>
     <div class="container">
         <header>
-            <h1>🎫 SoCal Strykers Revenue Analysis</h1>
+            <h1>SoCal Strykers Revenue Analysis</h1>
             <div class="subtitle">Statistical Model & Strategic Revenue Optimization</div>
             <div class="subtitle" style="font-size: 0.9em; margin-top: 5px;">Colby Morris | colby.morris08@gmail.com</div>
             <div class="subtitle" style="font-size: 0.85em; margin-top: 3px;">San Diego Wave Questionnaire</div>
@@ -446,7 +446,7 @@ html_content = f"""
 
         <!-- Executive Summary -->
         <div class="section">
-            <h2>📊 Executive Summary</h2>
+            <h2>Executive Summary</h2>
             <div class="metric-grid">
                 <div class="metric-card">
                     <div class="metric-label">Current Revenue</div>
@@ -469,7 +469,7 @@ html_content = f"""
 
         <!-- Regression Model Analysis -->
         <div class="section">
-            <h2>🔬 Regression Analysis</h2>
+            <h2>Regression Analysis</h2>
             
             <div class="note">
                 <strong>Key Finding:</strong> Customer purchase timing affects pricing differently by seat location. Premium seats lose significantly more value when sold last-minute.
@@ -550,7 +550,7 @@ Price = 79.12 (Intercept)<br>
 
         <!-- Revenue Initiatives -->
         <div class="section">
-            <h2>💰 Strategic Revenue Initiatives</h2>
+            <h2>Strategic Revenue Initiatives</h2>
             
             <!-- Initiative 1 -->
             <div class="initiative-card">
@@ -641,7 +641,7 @@ Combined total:        ${revenue_change_2:,.2f}</pre>
 
         <!-- Total Impact -->
         <div class="total-impact">
-            <h2 style="color: #ffffff; border: none; margin-bottom: 20px;">📈 Total Revenue Impact</h2>
+            <h2 style="color: #ffffff; border: none; margin-bottom: 20px;">Total Revenue Impact</h2>
             <div style="font-size: 1.2em; color: rgba(255, 255, 255, 0.8);">Current Revenue: ${baseline_revenue:,.0f}</div>
             <div class="amount">+${total_increase:,.0f}</div>
             <div class="percentage">+{total_increase/baseline_revenue*100:.2f}%</div>
@@ -651,7 +651,7 @@ Combined total:        ${revenue_change_2:,.2f}</pre>
 
         <!-- Summary Table -->
         <div class="section">
-            <h2>📋 Initiative Summary</h2>
+            <h2>Initiative Summary</h2>
             <table>
                 <thead>
                     <tr>
@@ -692,7 +692,7 @@ Combined total:        ${revenue_change_2:,.2f}</pre>
 
         <!-- Data Visualizations -->
         <div class="section">
-            <h2>📊 Data Visualizations</h2>
+            <h2>Data Visualizations</h2>
             <div class="image-grid">
 """
 
@@ -712,7 +712,7 @@ html_content += """
 
         <!-- Customer Type Breakdown -->
         <div class="section">
-            <h2>👥 Customer Type Analysis</h2>
+            <h2>Customer Type Analysis</h2>
             <div class="metric-grid">
                 <div class="metric-card">
                     <div class="metric-label">Planner (15+ days)</div>
@@ -738,7 +738,7 @@ html_content += """
 
         <!-- Implementation Timeline -->
         <div class="section">
-            <h2>⏱️ Implementation Timeline</h2>
+            <h2>Implementation Timeline</h2>
             <table>
                 <thead>
                     <tr>
